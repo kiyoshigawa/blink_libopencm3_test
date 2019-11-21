@@ -110,7 +110,6 @@ LDLIBS += -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
 
 all: $(PROJECT).elf $(PROJECT).bin $(PROJECT).size
 flash: $(PROJECT).flash
-size: $(PROJECT).size
 
 # error if not using linker script generator
 ifeq (,$(DEVICE))
