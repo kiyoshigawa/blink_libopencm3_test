@@ -49,6 +49,7 @@ LD	= $(PREFIX)gcc
 OBJCOPY	= $(PREFIX)objcopy
 OBJDUMP	= $(PREFIX)objdump
 OOCD	?= openocd
+SIZE	= $(PREFIX)size
 
 OPENCM3_INC = $(OPENCM3_DIR)/include
 
@@ -107,8 +108,9 @@ LDLIBS += -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
 %: s.%
 %: SCCS/s.%
 
-all: $(PROJECT).elf $(PROJECT).bin
+all: $(PROJECT).elf $(PROJECT).bin $(PROJECT).size
 flash: $(PROJECT).flash
+size: $(PROJECT).size
 
 # error if not using linker script generator
 ifeq (,$(DEVICE))
@@ -165,6 +167,19 @@ else
 		-c "program $(realpath $(*).elf) verify reset exit" \
 		$(NULL)
 endif
+
+%.size: %.elf
+	@echo "Output code size:"
+	@$(SIZE) -A -d $(*).elf | egrep 'text|data|bss' | awk ' \
+    function human(x) { \
+        if (x<1000) {return x} else {x/=1024} \
+        s="kMGTEPZY"; \
+        while (x>=1000 && length(s)>1) \
+            {x/=1024; s=substr(s,2)} \
+        return int(x+0.5) substr(s,1,1) \
+    } \
+	{printf("%10s %8s\n", $$1, human($$2))} \
+'
 
 clean:
 	rm -rf $(BUILD_DIR) $(GENERATED_BINS)
