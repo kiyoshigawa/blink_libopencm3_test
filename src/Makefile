@@ -3,12 +3,19 @@ BUILD_DIR = bin
 
 SHARED_DIR = ../lib
 CFILES = blink.c
-#these are for files in the lib folder
-#CFILES += api.c
+CFILES += timing.c
 #AFILES += api-asm.S
 
-# TODO - you will need to edit these two lines!
+#this will auto-generate an ld file for the chip
 DEVICE=stm32f070f6
+#this will allow upload to the chip using a blackmagic probe
+BMP_PORT=/dev/ttyS4
+
+#this sets the optimization of the code:
+OPT = -Os
+
+#set this to 0 for default, 1 for verbose, and to 99 for extremely verbose:
+V = 0
 
 # You shouldn't have to edit anything below here.
 VPATH += $(SHARED_DIR)

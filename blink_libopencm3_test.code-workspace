@@ -4,5 +4,15 @@
 			"path": "C:\\Dropbox\\!--Projects--!\\STM32F070F6 Testing\\libopencm3_testing"
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"rcc.h": "c",
+			"systick.h": "c",
+			"common.h": "c",
+			"memorymap.h": "c",
+			"syscfg.h": "c",
+			"vector.h": "c",
+			"gpio.h": "c"
+		}
+	}
 }
