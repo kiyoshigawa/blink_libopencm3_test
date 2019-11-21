@@ -1,14 +1,14 @@
-PROJECT = awesomesauce
+PROJECT = blink_libopencm3_test
 BUILD_DIR = bin
 
-SHARED_DIR = ../my-common-code
-CFILES = my-project.c
-CFILES += api.c
-AFILES += api-asm.S
+SHARED_DIR = ../lib
+CFILES = blink.c
+#these are for files in the lib folder
+#CFILES += api.c
+#AFILES += api-asm.S
 
 # TODO - you will need to edit these two lines!
-DEVICE=stm32f407vgt6
-OOCD_FILE = board/stm32f4discovery.cfg
+DEVICE=stm32f070f6
 
 # You shouldn't have to edit anything below here.
 VPATH += $(SHARED_DIR)
