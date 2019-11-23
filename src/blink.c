@@ -24,6 +24,11 @@ Copyright 2019 - kiyoshigawa - tim@twa.ninja
 #include <libopencm3/stm32/gpio.h>
 #include "timing.h"
 
+#define MAX_STACK_SIZE 1024
+
+//number of milliseconds between LED changing states
+#define LED_BLINK_RATE 1000
+
 int main(void) {
 	//Setup clocks:
 	rcc_clock_setup_in_hsi_out_48mhz();
@@ -37,10 +42,15 @@ int main(void) {
 	//GPIO Pin to Output:
 	gpio_mode_setup(GPIOA, GPIO_MODE_OUTPUT, GPIO_PUPD_NONE, GPIO5);
 
+	//make blink work without a delay function:
+	volatile uint64_t last_led_blink_time = 0;
+
 	//Blinky Loop:
 	while(1){
-		gpio_toggle(GPIOA, GPIO5);
-		delay(1000);
+		if((millis()-last_led_blink_time) >= LED_BLINK_RATE){
+			gpio_toggle(GPIOA, GPIO5);
+			last_led_blink_time = millis();
+		}
 	}
 	return 0;
 }

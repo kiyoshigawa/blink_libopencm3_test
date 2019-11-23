@@ -50,6 +50,7 @@ OBJCOPY	= $(PREFIX)objcopy
 OBJDUMP	= $(PREFIX)objdump
 OOCD	?= openocd
 SIZE	= $(PREFIX)size
+GDB	= gdb
 
 OPENCM3_INC = $(OPENCM3_DIR)/include
 
@@ -152,6 +153,7 @@ $(PROJECT).elf: $(OBJS) $(LDSCRIPT) $(LIBDEPS)
 %.list: %.elf
 	$(OBJDUMP) -S $< > $@
 
+ifeq (,$(BMP_PORT))
 %.flash: %.elf
 	@printf "  FLASH\t$<\n"
 ifeq (,$(OOCD_FILE))
@@ -166,6 +168,15 @@ else
 		-c "program $(realpath $(*).elf) verify reset exit" \
 		$(NULL)
 endif
+else
+%.flash: %.elf
+	@printf "  GDB   $(*).elf (flash)\n"
+	$(GDB) --batch \
+		   -ex 'target extended-remote $(BMP_PORT)' \
+		   -x $(BMP_SCR) \
+		   $(*).elf
+endif
+
 
 %.size: %.elf
 	@echo "Output code size:"

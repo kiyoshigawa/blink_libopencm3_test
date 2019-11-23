@@ -1,0 +1,22 @@
+#controls whether or not power is provided from the BMP
+monitor tpwr enable
+
+#let the chip boot after power is enabled
+interpreter-exec console "shell sleep 0.1"
+
+#toggle this to decide on if the BMP wil connect under reset or not.
+monitor connect_srst disable
+
+#toggle debug
+set debug remote 0
+
+#swd scan for the chip and attach to the first chip it finds
+monitor swdp_scan
+attach 1
+
+#this allows editing memory in gdb
+#set mem inaccessible-by-default off
+
+#load and verify the file
+load
+compare-sections

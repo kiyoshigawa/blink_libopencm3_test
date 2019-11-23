@@ -26,8 +26,8 @@ void systick_setup(void){
 	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
 	//reset the register for systick to 0
 	STK_CVR = 0;
-    //reset _millis to 0
-    _millis = 0;
+  //reset _millis to 0
+  _millis = 0;
 	//setup how often the systick interrupt will occur
 	//this is set to (processor speed/1000)-1
 	systick_set_reload( (rcc_ahb_frequency / 1000) -1 );
