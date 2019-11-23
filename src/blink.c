@@ -24,15 +24,12 @@ Copyright 2019 - kiyoshigawa - tim@twa.ninja
 #include <libopencm3/stm32/gpio.h>
 #include "timing.h"
 
-#define MAX_STACK_SIZE 1024
-
 //number of milliseconds between LED changing states
 #define LED_BLINK_RATE 1000
 
 int main(void) {
-	//Setup clocks:
-	rcc_clock_setup_in_hsi_out_48mhz();
-
+	//Setup external clock:
+	setup_external_48MHz_clock_from_16MHz_crystal();
 	//setup sys_tick:
 	systick_setup();
 

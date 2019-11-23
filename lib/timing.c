@@ -21,13 +21,43 @@ Copyright 2019 - kiyoshigawa - tim@twa.ninja
 
 #include "timing.h"
 
+//this sets the clock up to use an external 16MHz crystal with a 3x PLL multiplier for a system clock of 48MHz
+void setup_external_48MHz_clock_from_16MHz_crystal(void){
+	//enable external clock and wait for stabilization, then set the sysclock to the external clock
+	rcc_osc_on(RCC_HSE);
+	rcc_wait_for_osc_ready(RCC_HSE);
+	rcc_set_sysclk_source(RCC_HSE);
+
+	//this sets the prescale values to not divide the clock signal for the AHB and APB1 prescales.
+	rcc_set_hpre(RCC_CFGR_HPRE_NODIV);
+	rcc_set_ppre(RCC_CFGR_PPRE_NODIV);
+
+	//this controls flash prefetch settings - see notes in function definitions for why this has to be called before increasing the clock speed to 48MHz.
+	flash_prefetch_enable();
+	flash_set_ws(FLASH_ACR_LATENCY_024_048MHZ);
+
+	//this sets up the PLL to use the external 16MHz crystal: 16MHz * 3 = 48MHz */
+	rcc_set_pll_multiplication_factor(RCC_CFGR_PLLMUL_MUL3);
+	rcc_set_pll_source(RCC_CFGR_PLLSRC_HSE_CLK);
+	rcc_set_pllxtpre(RCC_CFGR_PLLXTPRE_HSE_CLK);
+
+	//turn on the pll clock and wait for it to be ready, then switch over to 48MHz operation on the external crystal:
+	rcc_osc_on(RCC_PLL);
+	rcc_wait_for_osc_ready(RCC_PLL);
+	rcc_set_sysclk_source(RCC_PLL);
+
+	//set the global values for the clocks so they can be used in other functions.
+	rcc_apb1_frequency = 48000000;
+	rcc_ahb_frequency = 48000000;
+}
+
 void systick_setup(void){
 	//set systick clocksource to main clock
 	systick_set_clocksource(STK_CSR_CLKSOURCE_AHB);
 	//reset the register for systick to 0
 	STK_CVR = 0;
-  //reset _millis to 0
-  _millis = 0;
+	//reset _millis to 0
+	_millis = 0;
 	//setup how often the systick interrupt will occur
 	//this is set to (processor speed/1000)-1
 	systick_set_reload( (rcc_ahb_frequency / 1000) -1 );

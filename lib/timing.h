@@ -26,6 +26,10 @@ Copyright 2019 - kiyoshigawa - tim@twa.ninja
 #include <stdbool.h>
 #include <libopencm3/cm3/systick.h>
 #include <libopencm3/stm32/rcc.h>
+#include <libopencm3/stm32/flash.h>
+
+//this sets the clock up to use an external 16MHz crystal with a 3x PLL multiplier for a system clock of 48MHz
+void setup_external_48MHz_clock_from_16MHz_crystal(void);
 
 //this will keep track of milliseconds since the program begins:
 static volatile uint64_t _millis;
