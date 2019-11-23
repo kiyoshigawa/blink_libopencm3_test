@@ -110,7 +110,7 @@ LDLIBS += -Wl,--start-group -lc -lgcc -lnosys -Wl,--end-group
 %: SCCS/s.%
 
 all: $(PROJECT).elf $(PROJECT).bin $(PROJECT).size
-flash: $(PROJECT).flash
+flash: $(PROJECT).flash $(PROJECT).size
 
 # error if not using linker script generator
 ifeq (,$(DEVICE))

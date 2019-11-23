@@ -15,8 +15,11 @@ monitor swdp_scan
 attach 1
 
 #this allows editing memory in gdb
-#set mem inaccessible-by-default off
+set mem inaccessible-by-default off
 
 #load and verify the file
 load
 compare-sections
+
+#run the new program after loading is done
+run
